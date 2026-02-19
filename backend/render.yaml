@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: debugai-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SLACK_BOT_TOKEN
+        sync: false
+      - key: SLACK_SIGNING_SECRET
+        sync: false
+      - key: SLACK_APP_TOKEN
+        sync: false
+      - key: PORT
+        value: 3001

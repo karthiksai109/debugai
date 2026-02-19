@@ -1,0 +1,19 @@
+{
+  "name": "debugai-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "dependencies": {
+    "@slack/bolt": "^4.1.0",
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "openai": "^4.77.0",
+    "uuid": "^11.0.3"
+  }
+}
