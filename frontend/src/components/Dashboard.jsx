@@ -12,6 +12,38 @@ const SEVERITY_COLORS = {
 
 const CATEGORY_COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#6366f1'];
 
+const DEMO_STATS = {
+  total: 47,
+  completed: 42,
+  failed: 3,
+  pending: 2,
+  avgConfidence: 0.87,
+  bySeverity: [
+    { severity: 'critical', count: 5 },
+    { severity: 'high', count: 12 },
+    { severity: 'medium', count: 18 },
+    { severity: 'low', count: 9 },
+    { severity: 'info', count: 3 }
+  ],
+  byCategory: [
+    { category: 'runtime_error', count: 11 },
+    { category: 'performance', count: 9 },
+    { category: 'database', count: 8 },
+    { category: 'memory_leak', count: 6 },
+    { category: 'network', count: 5 },
+    { category: 'security', count: 4 },
+    { category: 'configuration', count: 4 }
+  ],
+  recent: [
+    { id: 'demo-1', input_text: 'java.lang.OutOfMemoryError: Java heap space at com.app.cache.InMemoryCache.put', severity: 'critical', category: 'memory_leak', status: 'completed', created_at: new Date().toISOString() },
+    { id: 'demo-2', input_text: 'Connection pool exhausted: HikariPool-1 - Connection is not available, request timed out after 30000ms', severity: 'high', category: 'database', status: 'completed', created_at: new Date().toISOString() },
+    { id: 'demo-3', input_text: 'upstream timed out (110: Connection timed out) while reading response header from upstream, p99: 12.4s', severity: 'high', category: 'performance', status: 'completed', created_at: new Date().toISOString() },
+    { id: 'demo-4', input_text: 'WARN: SQL injection attempt detected in parameter user_id, input: "1 OR 1=1; DROP TABLE users"', severity: 'critical', category: 'security', status: 'completed', created_at: new Date().toISOString() },
+    { id: 'demo-5', input_text: 'TypeError: Cannot read properties of undefined (reading "map") at UserService.getAll', severity: 'medium', category: 'runtime_error', status: 'completed', created_at: new Date().toISOString() },
+    { id: 'demo-6', input_text: 'Redis ETIMEDOUT: connection timed out to 10.0.2.50:6379 after 5000ms', severity: 'medium', category: 'network', status: 'completed', created_at: new Date().toISOString() }
+  ]
+};
+
 export default function Dashboard({ onViewDetail }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,8 +68,32 @@ export default function Dashboard({ onViewDetail }) {
   }
 
   if (loading) return <div className="text-gray-400 py-12 text-center">Loading dashboard...</div>;
-  if (error) return <div className="text-red-400 py-12 text-center">{error}</div>;
-  if (!stats) return null;
+
+  if (error || !stats) {
+    return (
+      <div className="text-center py-16">
+        <div className="bg-gray-900 rounded-xl border border-gray-800 max-w-lg mx-auto p-8">
+          <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-yellow-400 text-xl">!</span>
+          </div>
+          <h2 className="text-lg text-gray-200 mb-2">Backend not connected</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            The API server is not reachable. To see live data, start the backend locally or deploy it to Render.
+          </p>
+          <code className="text-xs text-gray-600 bg-gray-950 px-3 py-1.5 rounded">cd backend && npm run dev</code>
+          <div className="mt-6 pt-6 border-t border-gray-800">
+            <p className="text-xs text-gray-600 mb-3">Preview with demo data:</p>
+            <button
+              onClick={() => { setStats(DEMO_STATS); setError(null); }}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              Load Demo Data
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
